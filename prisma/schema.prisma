@@ -1,0 +1,167 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider    = "postgresql"
+    url         = env("DATABASE_URL")
+}
+
+
+model Roles {
+    id Int @id @default(autoincrement())
+    name String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    users User[]
+    rolePermissions RolePermissions[]
+    @@map("roles")
+    @@unique([name, deletedAt])
+}
+
+enum StatusUser {
+    ACTIVE
+    INACTIVE
+}
+
+enum TypePermission {
+    CREATE
+    READ
+    UPDATE
+    DELETE
+}
+
+model User {
+    id Int @id @default(autoincrement())
+    name String
+    email String
+    password String
+    roleId Int
+    role Roles @relation(fields: [roleId], references: [id])
+    status StatusUser @default(ACTIVE)
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    tokens TokensUser[]
+    sites Sites[]
+    events Events[]
+    @@map("users")
+    @@unique([email, deletedAt])
+}
+
+model TokensUser {
+    id Int @id @default(autoincrement())
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id])
+    token String @unique
+    expiresAt DateTime
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    @@map("tokens_users")
+    @@unique([token, deletedAt])
+}
+
+model Permissions {
+    id Int @id @default(autoincrement())
+    name String
+    type TypePermission
+    description String?
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    rolePermissions RolePermissions[]
+    @@map("permissions")
+    @@unique([name, type, deletedAt])
+}
+
+model RolePermissions {
+    id Int @id @default(autoincrement())
+    roleId Int @map("role_id")
+    role Roles @relation(fields: [roleId], references: [id])
+    permissionId Int @map("permission_id")
+    permission Permissions @relation(fields: [permissionId], references: [id])
+    @@map("role_permissions")
+    @@unique([roleId, permissionId])
+}
+
+enum StatusSite {
+    ACTIVE
+    INACTIVE
+}
+
+model Sites {
+    id Int @id @default(autoincrement())
+    name String
+    description String?
+    ubication String?
+    direction String?
+    phone String?
+    email String?
+    capacity Int?
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id])
+    status StatusSite @default(ACTIVE)
+    events Events[]
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    @@map("sites")
+}
+
+enum TypeEvent {
+    PUBLIC
+    PRIVATE
+}
+
+enum StatusEvent {
+    PENDING
+    IN_PROGRESS
+    CONFIRMED
+    CANCELLED
+    COMPLETED
+    ARCHIVED
+}
+
+model Events {
+    id Int @id @default(autoincrement())
+    name String
+    type TypeEvent
+    status StatusEvent @default(PENDING)
+    description String?
+    startTime DateTime @map("start_time")
+    endTime DateTime @map("end_time")
+    siteId Int @map("site_id")
+    site Sites @relation(fields: [siteId], references: [id])
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    agendas Agendas[]
+    @@map("events")
+}
+
+enum StatusAgenda {
+    PENDING
+    IN_PROGRESS
+    CONFIRMED
+    CANCELLED
+    COMPLETED
+    ARCHIVED
+}
+
+model Agendas {
+    id Int @id @default(autoincrement())
+    activity String
+    eventId Int @map("event_id")
+    event Events @relation(fields: [eventId], references: [id])
+    startTime DateTime @map("start_time")
+    endTime DateTime @map("end_time")
+    status StatusAgenda @default(PENDING)
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    @@map("agendas")
+}
