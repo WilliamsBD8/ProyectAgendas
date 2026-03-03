@@ -109,13 +109,11 @@ module.exports = {
         required: ["name", "ubication", "direction", "phone", "email", "capacity"],
         properties: {
           name: { type: "string", example: "Centro de Convenciones" },
-          description: { type: "string", example: "Sala principal" },
           ubication: { type: "string", example: "Bogotá" },
           direction: { type: "string", example: "Calle 123 #45-67" },
           phone: { type: "string", example: "3001234567" },
           email: { type: "string", format: "email", example: "sitio@email.com" },
           capacity: { type: "integer", example: 500 },
-          status: { type: "string", enum: ["ACTIVE", "INACTIVE"], example: "ACTIVE" },
         },
       },
       EventRequest: {
@@ -214,6 +212,10 @@ module.exports = {
           content: {
             "application/json": {
               schema: { $ref: "#/components/schemas/LoginRequest" },
+              example: {
+                email: "admin@email.com",
+                password: "123456",
+              },
             },
           },
         },
@@ -251,7 +253,7 @@ module.exports = {
     "/api/v1/security/create-permission": { post: { tags: ["Security"], summary: "Crear permiso", security: [{ bearerAuth: [] }], requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/PermissionRequest" } } } }, responses: { 200: { description: "Permiso creado" } } } },
     "/api/v1/security/assign-permission-to-role": { post: { tags: ["Security"], summary: "Asignar permisos a rol", security: [{ bearerAuth: [] }], requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/AssignPermissionsRequest" } } } }, responses: { 200: { description: "Permisos asignados" } } } },
 
-    "/api/v1/sites/create-site": { post: { tags: ["Sites"], summary: "Crear sitio", security: [{ bearerAuth: [] }], requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/SiteRequest" } } } }, responses: { 200: { description: "Sitio creado" } } } },
+    "/api/v1/sites/create-site": { post: { tags: ["Sites"], summary: "Crear sitio", security: [{ bearerAuth: [] }], requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/SiteRequest" }, example: { name: "Centro de Convenciones", ubication: "Bogotá", direction: "Calle 123 #45-67", phone: "3001234567", email: "sitio@email.com", capacity: 500 } } } }, responses: { 200: { description: "Sitio creado" }, 400: { description: "Error de validación", content: { "application/json": { schema: { $ref: "#/components/schemas/ErrorResponse" } } } } } } },
     "/api/v1/sites/update-site/{id}": { put: { tags: ["Sites"], summary: "Actualizar sitio", security: [{ bearerAuth: [] }], parameters: [{ in: "path", name: "id", required: true, schema: { type: "integer" } }], requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/SiteRequest" } } } }, responses: { 200: { description: "Sitio actualizado" } } } },
     "/api/v1/sites/delete-site/{id}": { delete: { tags: ["Sites"], summary: "Eliminar sitio", security: [{ bearerAuth: [] }], parameters: [{ in: "path", name: "id", required: true, schema: { type: "integer" } }], responses: { 200: { description: "Sitio eliminado" } } } },
     "/api/v1/sites/get-sites": { get: { tags: ["Sites"], summary: "Listar sitios", security: [{ bearerAuth: [] }], parameters: [{ in: "query", name: "page", schema: { type: "integer" } }, { in: "query", name: "limit", schema: { type: "integer" } }, { in: "query", name: "all", schema: { type: "boolean" } }], responses: { 200: { description: "Sitios obtenidos" } } } },

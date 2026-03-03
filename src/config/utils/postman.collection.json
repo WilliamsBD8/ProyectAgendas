@@ -68,6 +68,7 @@
         },
         {
           "name": "Logout",
+          "disabled": true,
           "request": {
             "auth": {
               "type": "bearer",
@@ -88,7 +89,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"token\": \"{{token}}\"\n}"
+              "raw": "{\n  \"token\": \"{{token}}_dummy\"\n}"
             },
             "url": "{{baseUrl}}/api/v1/auth/logout"
           }
@@ -140,7 +141,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Centro Convenciones\",\n  \"description\": \"Sala principal\",\n  \"ubication\": \"Bogotá\",\n  \"direction\": \"Calle 10 # 20-30\",\n  \"phone\": \"3001234567\",\n  \"email\": \"sitio@mail.com\",\n  \"capacity\": 100\n}"
+              "raw": "{\n  \"name\": \"Centro Convenciones\",\n  \"ubication\": \"Bogotá\",\n  \"direction\": \"Calle 10 # 20-30\",\n  \"phone\": \"3001234567\",\n  \"email\": \"sitio{{$timestamp}}@mail.com\",\n  \"capacity\": 100\n}"
             },
             "url": "{{baseUrl}}/api/v1/sites/create-site"
           }
