@@ -46,6 +46,10 @@ model User {
     tokens TokensUser[]
     sites Sites[]
     events Events[]
+    tickets Tickets[]
+    notifications Notifications[]
+    surveys Surveys[]
+    surveyResponses SurveyResponses[]
     @@map("users")
     @@unique([email, deletedAt])
 }
@@ -140,6 +144,8 @@ model Events {
     updatedAt DateTime @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
     agendas Agendas[]
+    tickets Tickets[]
+    surveys Surveys[]
     @@map("events")
 }
 
@@ -164,4 +170,66 @@ model Agendas {
     updatedAt DateTime @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
     @@map("agendas")
+}
+
+enum StatusTicket {
+    ACTIVE
+    INACTIVE
+}
+
+model Tickets {
+    id Int @id @default(autoincrement())
+    codeQr String @unique @map("code_qr")
+    eventId Int @map("event_id")
+    event Events @relation(fields: [eventId], references: [id])
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id])
+    validated Boolean @default(false)
+    validatedAt DateTime? @map("validated_at")
+    status StatusTicket @default(ACTIVE)
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    @@map("tickets")
+}
+
+model Notifications {
+    id Int @id @default(autoincrement())
+    title String
+    message String
+    isRead Boolean @default(false) @map("is_read")
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    @@map("notifications")
+}
+
+model Surveys {
+    id Int @id @default(autoincrement())
+    titleSurvey String @map("title_survey")
+    eventId Int @map("event_id")
+    event Events @relation(fields: [eventId], references: [id])
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id])
+    responses SurveyResponses[]
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    @@map("surveys")
+}
+
+model SurveyResponses {
+    id Int @id @default(autoincrement())
+    surveyId Int @map("survey_id")
+    survey Surveys @relation(fields: [surveyId], references: [id])
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id])
+    stars Int
+    comment String?
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    @@map("survey_responses")
 }
