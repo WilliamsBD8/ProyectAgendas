@@ -24,6 +24,7 @@ exports.validateFields = (body, fields, res) => {
     fields.forEach(field => {
         // Si el campo no existe y es required, agregamos error y saltamos a siguiente campo
         const value = body[field.field];
+        const hasDateTimeValidation = field.validations.some(v => v.type === "datetime");
 
         const isRequired = field.validations.some(v => v.type === "required");
         if (isRequired && (value === undefined || value === null || value === "")) {
@@ -35,7 +36,7 @@ exports.validateFields = (body, fields, res) => {
 
             switch (validation.type) {
                 case "min":
-                    if (isValidDateTime(value)) {
+                    if (hasDateTimeValidation && isValidDateTime(value) && isValidDateTime(validation.value)) {
                         // Comparación de fechas
                         const minDate = validation.value instanceof Date ? validation.value : new Date(validation.value);
                         if (new Date(value) < minDate) {
@@ -48,7 +49,7 @@ exports.validateFields = (body, fields, res) => {
                     }
                     break;
                 case "max":
-                    if (isValidDateTime(value)) {
+                    if (hasDateTimeValidation && isValidDateTime(value) && isValidDateTime(validation.value)) {
                         // Comparación de fechas
                         const maxDate = validation.value instanceof Date ? validation.value : new Date(validation.value);
                         if (new Date(value) > maxDate) {

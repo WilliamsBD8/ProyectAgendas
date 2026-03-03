@@ -120,7 +120,14 @@ exports.getEvents = async (req, res, next) => {
     try {
         const { page = 1, limit = 10, all = false } = req.query;
         const userId = parseInt(req.user.id);
-        const where = { deletedAt: null };
+        const where = {
+            deletedAt: null,
+            site: {
+                is: {
+                    deletedAt: null,
+                },
+            },
+        };
 
         if(req.user.role.id !== 1){
             where.userId = userId;
@@ -130,7 +137,6 @@ exports.getEvents = async (req, res, next) => {
             where,
             include: {
                 site: {
-                    where: { deletedAt: null },
                     select: {
                         name: true,
                     },

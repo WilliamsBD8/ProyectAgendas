@@ -47,6 +47,34 @@ function errorMiddleware(err, req, res, next) {
                     return res.status(404).json(
                         errorResponse("El usuario no existe", null, 404)
                     );
+                case "tickets_event_id_fkey":
+                    return res.status(404).json(
+                        errorResponse("El evento no existe", null, 404)
+                    );
+                case "tickets_user_id_fkey":
+                    return res.status(404).json(
+                        errorResponse("El usuario no existe", null, 404)
+                    );
+                case "notifications_user_id_fkey":
+                    return res.status(404).json(
+                        errorResponse("El usuario no existe", null, 404)
+                    );
+                case "surveys_event_id_fkey":
+                    return res.status(404).json(
+                        errorResponse("El evento no existe", null, 404)
+                    );
+                case "surveys_user_id_fkey":
+                    return res.status(404).json(
+                        errorResponse("El usuario no existe", null, 404)
+                    );
+                case "survey_responses_survey_id_fkey":
+                    return res.status(404).json(
+                        errorResponse("La encuesta no existe", null, 404)
+                    );
+                case "survey_responses_user_id_fkey":
+                    return res.status(404).json(
+                        errorResponse("El usuario no existe", null, 404)
+                    );
                 default:
                     return res.status(404).json(
                         errorResponse("El registro no existe", null, 404)

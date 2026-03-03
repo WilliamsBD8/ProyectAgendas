@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "start:docker": "npx prisma migrate deploy && npx prisma db seed"
+    "start:docker": "npx prisma migrate deploy && npx prisma db seed",
+    "seed:endpoints:34": "node scripts/seed-modules-3-4-endpoints.js",
+    "test:intensive:34": "node scripts/test-modules-3-4-intensive.js"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +22,8 @@
     "dotenv": "^17.3.1",
     "express": "^4.21.0",
     "bcrypt": "^5.1.1",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "prisma": "^6.16.0"

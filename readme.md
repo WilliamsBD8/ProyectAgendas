@@ -33,6 +33,37 @@ docker compose up --build -d
 
 El backend ejecuta automáticamente `prisma migrate deploy` y `prisma db seed` al iniciar (ver script `start:docker` en `package.json`).
 
+## Swagger
+
+La documentación interactiva está disponible en:
+
+- `http://localhost:3000/api-docs`
+
+Incluye todos los endpoints del backend (módulos 1, 2, 3 y 4) con autenticación Bearer JWT para rutas protegidas.
+
+## Nuevos endpoints (Módulo 3 y 4)
+
+- `POST /api/v1/tickets/create-ticket`
+- `GET /api/v1/tickets/get-tickets`
+- `PUT /api/v1/tickets/validate-ticket/:codeQr`
+- `POST /api/v1/notifications/create-notification`
+- `GET /api/v1/notifications/get-notifications`
+- `PUT /api/v1/notifications/mark-notification-as-read/:id`
+- `POST /api/v1/surveys/create-survey`
+- `GET /api/v1/surveys/get-surveys`
+- `POST /api/v1/surveys/create-survey-response`
+- `GET /api/v1/surveys/get-survey-responses`
+
+## Pruebas intensivas (Módulo 3 y 4)
+
+Con los contenedores arriba, ejecuta:
+
+```bash
+npm run test:intensive:34
+```
+
+Este script prueba integración end-to-end de tickets, validación QR, notificaciones, encuestas y respuestas contra la base de datos en Docker.
+
 ---
 
 ## Migraciones con Prisma
